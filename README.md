@@ -73,6 +73,11 @@ nome_do_projeto/
 │   ├── admin.py
 │   └── views.py
 │
+├── core/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
 ├── manage.py
 ├── poetry.lock
 ├── pyproject.toml
@@ -85,7 +90,8 @@ nome_do_projeto/
 
 ### Executar comandos Django com Poetry
 
-Não é necessário ativar manualmente o ambiente virtual. Use **`poetry run`** para executar qualquer comando dentro do ambiente isolado:
+Não é necessário ativar manualmente o ambiente virtual.  
+Use **`poetry run`** para executar qualquer comando dentro do ambiente isolado:
 
 ```bash
 poetry run python manage.py makemigrations
@@ -102,11 +108,39 @@ poetry install                # Instala dependências do pyproject.toml
 poetry update                 # Atualiza pacotes
 ```
 
-> 💡 Assim, não há necessidade de ativar a virtualenv manualmente nem usar `python` fora do Poetry.
+> 💡 Assim, não há necessidade de ativar a virtualenv manualmente na maioria dos casos.
 
 ---
 
-## 🌱 4️⃣ Configuração do Git e Branches
+## 🧩 4️⃣ Ambiente Virtual do Poetry (IMPORTANTE)
+
+Os testes e scripts do Django só funcionam **dentro do ambiente virtual criado pelo Poetry**.
+
+### 🔹 Ativar o ambiente virtual
+
+Para ativar o ambiente manualmente, use:
+
+```bash
+poetry env activate
+```
+
+O Poetry vai exibir o comando correto para ativar seu ambiente — por exemplo, no **Windows PowerShell**:
+
+```powershell
+& "D:\Curso\modulo python\django_serializer\.venv\Scripts\activate.ps1"
+```
+
+Depois disso, o prompt mostrará algo como:
+
+```
+(django-serializer-py3.13) PS D:\Curso\modulo python\django_serializer>
+```
+
+> ⚠️ Sempre que for rodar testes com `pytest`, `python manage.py test`, ou comandos diretos do Django, **ative o ambiente primeiro**.
+
+---
+
+## 🌱 5️⃣ Configuração do Git e Branches
 
 ### Inicialize o repositório
 
@@ -138,7 +172,7 @@ git push origin setup_inicial
 
 ---
 
-## 🔄 5️⃣ Preparação para Pull Requests
+## 🔄 6️⃣ Preparação para Pull Requests
 
 1. Suba sua branch para o repositório remoto:
 
@@ -154,20 +188,21 @@ git push origin setup_inicial
 
 ---
 
-## 💡 6️⃣ Configuração no VS Code
+## 💡 7️⃣ Configuração no VS Code
 
 - Instale as extensões:
 
   - **Black Formatter**
+  - **Python**
+  - **Django**
 
 - Configure o interpretador Python:
-
   - `Ctrl + Shift + P` → `Python: Select Interpreter`
-  - Escolha o ambiente gerenciado pelo Poetry.
+  - Escolha o ambiente virtual criado pelo Poetry (`.venv`).
 
 ---
 
-## 🧰 7️⃣ Comandos úteis
+## 🧰 8️⃣ Comandos úteis
 
 | Tarefa                | Comando                                 |
 | --------------------- | --------------------------------------- |
@@ -175,14 +210,14 @@ git push origin setup_inicial
 | Adicionar pacote      | `poetry add <pacote>`                   |
 | Rodar servidor Django | `poetry run python manage.py runserver` |
 | Rodar migrações       | `poetry run python manage.py migrate`   |
-| Rodar testes          | `poetry run python manage.py test`      |
+| Rodar testes          | `pytest -v`                             |
 | Atualizar pacotes     | `poetry update`                         |
 
 ---
 
-## 📘 8️⃣ Configurando o Django REST Framework
+## 📘 9️⃣ Configurando o Django REST Framework
 
-No arquivo `settings.py`, adicione:
+No arquivo `core/settings.py`, adicione:
 
 ```python
 INSTALLED_APPS = [
@@ -192,14 +227,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
-    'nome_do_app',
+    'order',
+    'product',
 ]
 ```
 
 ---
 
-## 🧩 9️⃣ Executar o Projeto
+## 🚀 🔟 Executar o Projeto
 
 ```bash
 poetry run python manage.py makemigrations
@@ -211,6 +248,6 @@ Acesse em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
-📘 **Autor:** _Renato Minoita_
-💻 **Tecnologia:** Django + Poetry + Git
+📘 **Autor:** _Renato Minoita_  
+💻 **Tecnologia:** Django + Poetry + Git  
 📅 **Atualizado:** Outubro de 2025
