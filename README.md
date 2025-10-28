@@ -1,223 +1,127 @@
-# 🐍 Guia Completo — Criando Projeto Python com Poetry, Django REST e Git Workflow
+# 🐍 Guia Completo — Criando um Projeto Django com Poetry + GitHub
 
-Este guia explica como criar e gerenciar um projeto Python/Django com **Poetry**, preparar o ambiente para **pull requests** e **branches**, e automatizar o fluxo de trabalho tanto no **Windows (VS Code)** quanto no **Linux**.
+Este guia ensina **do zero** como criar, configurar e rodar um projeto **Django** usando o **Poetry** para gerenciar dependências e o **GitHub** para versionar o código.  
+Ideal pra quem quer um **setup limpo, profissional e pronto pra escalar**. 🚀
 
 ---
 
-## 🚀 1️⃣ Criando o Projeto com Poetry
+## 🧩 1. Criar o repositório no GitHub
 
-### 🔹 Instale o Poetry
+1. Vá até o [GitHub](https://github.com/new) e clique em **New Repository**.  
+2. Escolha o nome (exemplo): `book-store`.  
+3. Marque:
+   - ✅ **Add a README file**
+   - ✅ **Add .gitignore** → selecione **Python**
+4. Clique em **Create repository**.
 
-**Windows (PowerShell):**
+---
 
-```powershell
-(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
-```
+## 💻 2. Clonar o repositório
 
-**Linux/macOS:**
+Abra o **PowerShell (Windows)** ou **Terminal (Linux)** e execute:
 
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
+git clone https://github.com/seu-usuario/book-store.git
+cd book-store
 ```
 
-Verifique se está funcionando:
+---
+
+## ⚙️ 3. Instalar o Poetry
+
+### 🪟 No Windows:
+
+```bash
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+```
+
+> Após instalar, feche e reabra o terminal, depois teste:
 
 ```bash
 poetry --version
 ```
 
-> ⚡ Dica: Caso não reconheça o comando no Windows, adicione manualmente ao PATH:
-> `C:\Users\<seu_usuario>\AppData\Roaming\Python\Scripts`
+### 🐧 No Linux:
+
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
 
 ---
 
-### 🔹 Criar o projeto Django
+## 🧙 4. Iniciar o projeto com o Poetry
+
+Crie o arquivo `pyproject.toml`:
 
 ```bash
-poetry new nome_do_projeto
-cd nome_do_projeto
+poetry init
 ```
 
-Instale o Django e o Django REST Framework:
+Responda às perguntas interativas.  
+Exemplo de resultado final:
+
+```toml
+[project]
+name = "book-store"
+version = "0.1.0"
+description = "Book Store API"
+authors = [{name = "Renato Minoita", email = "renatornt13@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.13"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+```
+
+---
+
+## 🧩 5. Criar e ativar o ambiente virtual
+
+Crie o ambiente e instale as dependências iniciais:
+
+```bash
+poetry install
+```
+
+Ative o ambiente:
+
+```bash
+poetry shell
+```
+
+> ⚠️ Se quiser sair do ambiente:
+> ```bash
+> exit
+> ```
+
+---
+
+## 🧱 6. Instalar Django e Django REST Framework
 
 ```bash
 poetry add django djangorestframework
 ```
 
-Crie o projeto base do Django:
+---
+
+## 🏗️ 7. Criar o projeto Django
+
+Crie o projeto principal:
 
 ```bash
-poetry run django-admin startproject core .
-```
-
-Crie os apps conforme o exemplo da estrutura:
-
-```bash
-poetry run python manage.py startapp nome_do_app
+poetry run django-admin startproject bookstore .
 ```
 
 ---
 
-## 📁 2️⃣ Estrutura de Pastas (Exemplo)
-
-```
-nome_do_projeto/
-│
-├── nome_do_app/
-│   ├── migrations/
-│   ├── models/
-│   ├── serializers/
-│   ├── tests/
-│   │   └── factories.py
-│   ├── apps.py
-│   ├── admin.py
-│   └── views.py
-│
-├── core/
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── manage.py
-├── poetry.lock
-├── pyproject.toml
-└── README.md
-```
-
----
-
-## 🧠 3️⃣ Usando o Poetry para Gerenciar o Projeto
-
-### Executar comandos Django com Poetry
-
-Não é necessário ativar manualmente o ambiente virtual.  
-Use **`poetry run`** para executar qualquer comando dentro do ambiente isolado:
+## 📦 8. Criar um app dentro do projeto
 
 ```bash
-poetry run python manage.py makemigrations
-poetry run python manage.py migrate
-poetry run python manage.py runserver
+poetry run python manage.py startapp api
 ```
 
-### Outras operações úteis
-
-```bash
-poetry add <pacote>           # Adiciona um pacote
-poetry remove <pacote>        # Remove um pacote
-poetry install                # Instala dependências do pyproject.toml
-poetry update                 # Atualiza pacotes
-```
-
-> 💡 Assim, não há necessidade de ativar a virtualenv manualmente na maioria dos casos.
-
----
-
-## 🧩 4️⃣ Ambiente Virtual do Poetry (IMPORTANTE)
-
-Os testes e scripts do Django só funcionam **dentro do ambiente virtual criado pelo Poetry**.
-
-### 🔹 Ativar o ambiente virtual
-
-Para ativar o ambiente manualmente, use:
-
-```bash
-poetry env activate
-```
-
-O Poetry vai exibir o comando correto para ativar seu ambiente — por exemplo, no **Windows PowerShell**:
-
-```powershell
-& "D:\Curso\modulo python\django_serializer\.venv\Scripts\activate.ps1"
-```
-
-Depois disso, o prompt mostrará algo como:
-
-```
-(django-serializer-py3.13) PS D:\Curso\modulo python\django_serializer>
-```
-
-> ⚠️ Sempre que for rodar testes com `pytest`, `python manage.py test`, ou comandos diretos do Django, **ative o ambiente primeiro**.
-
----
-
-## 🌱 5️⃣ Configuração do Git e Branches
-
-### Inicialize o repositório
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-### Crie a branch principal
-
-```bash
-git branch -M main
-```
-
-### Crie uma branch de feature
-
-```bash
-git checkout -b setup_inicial
-```
-
-Após terminar a feature:
-
-```bash
-git add .
-git commit -m "feat: setup inicial"
-git push origin setup_inicial
-```
-
----
-
-## 🔄 6️⃣ Preparação para Pull Requests
-
-1. Suba sua branch para o repositório remoto:
-
-   ```bash
-   git push -u origin setup_inicial
-   ```
-
-2. No GitHub, clique em **Compare & Pull Request**.
-
-3. Adicione título e descrição explicando o que foi alterado.
-
-4. Solicite revisão antes do merge.
-
----
-
-## 💡 7️⃣ Configuração no VS Code
-
-- Instale as extensões:
-
-  - **Black Formatter**
-  - **Python**
-  - **Django**
-
-- Configure o interpretador Python:
-  - `Ctrl + Shift + P` → `Python: Select Interpreter`
-  - Escolha o ambiente virtual criado pelo Poetry (`.venv`).
-
----
-
-## 🧰 8️⃣ Comandos úteis
-
-| Tarefa                | Comando                                 |
-| --------------------- | --------------------------------------- |
-| Instalar dependências | `poetry install`                        |
-| Adicionar pacote      | `poetry add <pacote>`                   |
-| Rodar servidor Django | `poetry run python manage.py runserver` |
-| Rodar migrações       | `poetry run python manage.py migrate`   |
-| Rodar testes          | `pytest -v`                             |
-| Atualizar pacotes     | `poetry update`                         |
-
----
-
-## 📘 9️⃣ Configurando o Django REST Framework
-
-No arquivo `core/settings.py`, adicione:
+Adicione o app em `bookstore/settings.py`:
 
 ```python
 INSTALLED_APPS = [
@@ -227,27 +131,232 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
-    'order',
-    'product',
+    'api',
 ]
 ```
 
 ---
 
-## 🚀 🔟 Executar o Projeto
+## 🧾 9. Aplicar migrações iniciais
+
+```bash
+poetry run python manage.py migrate
+```
+
+---
+
+## 🚀 10. Rodar o servidor local
+
+```bash
+poetry run python manage.py runserver
+```
+
+Acesse: 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## 🧩 11. Criar sua primeira API
+
+### 📁 `api/models.py`
+
+```python
+from django.db import models
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return self.title
+```
+
+---
+
+### 🔧 Criar e aplicar migração
 
 ```bash
 poetry run python manage.py makemigrations
 poetry run python manage.py migrate
-poetry run python manage.py runserver
 ```
 
-Acesse em: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+---
+
+### 🧠 `api/serializers.py`
+
+```python
+from rest_framework import serializers
+from .models import Book
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
+```
+
+---
+
+### ⚙️ `api/views.py`
+
+```python
+from rest_framework import viewsets
+from .models import Book
+from .serializers import BookSerializer
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+```
+
+---
+
+### 🌐 `api/urls.py`
+
+```python
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import BookViewSet
+
+router = DefaultRouter()
+router.register(r'books', BookViewSet)
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
+```
+
+---
+
+### 📡 `bookstore/urls.py`
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
+]
+```
+
+Acesse: 👉 [http://127.0.0.1:8000/api/books/](http://127.0.0.1:8000/api/books/)
+
+---
+
+## 🧰 12. Comandos opcionais úteis
+
+### 🧹 Formatador de código (Black)
+
+```bash
+poetry add --dev black
+poetry run black .
+```
+
+### 🧪 Testes automatizados (Pytest)
+
+```bash
+poetry add --dev pytest pytest-django factory-boy
+```
+
+Rodar os testes:
+
+```bash
+poetry run pytest -v
+```
+
+### 🧭 Organização de imports (isort)
+
+```bash
+poetry add --dev isort
+poetry run isort .
+```
+
+### 🧼 Linter (Flake8)
+
+```bash
+poetry add --dev flake8
+poetry run flake8
+```
+
+---
+
+## 📂 13. Estrutura final do projeto
+
+```
+book-store/
+│
+├── api/
+│   ├── migrations/
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│
+├── bookstore/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+│
+├── pyproject.toml
+├── poetry.lock
+├── manage.py
+└── README.md
+```
+
+---
+
+## 🌳 14. Criar branch e versionar o projeto
+
+```bash
+git checkout -b project-setup
+git add .
+git commit -m "Configuração inicial do projeto Django com Poetry"
+git push -u origin project-setup
+```
+
+---
+
+## 🔄 15. Criar Pull Request no GitHub
+
+1. Vá até o repositório no GitHub.  
+2. Clique em **Compare & pull request**.  
+3. Revise e clique em **Create pull request**.  
+4. Depois, **Merge pull request** → **Confirm merge**.  
+5. (Opcional) Exclua a branch `project-setup`.
+
+---
+
+## 💾 16. Atualizar repositório local após o merge
+
+```bash
+git checkout main
+git pull origin main
+```
+
+---
+
+## 🧠 17. Tabela de comandos Poetry
+
+| Comando | Descrição |
+|----------|------------|
+| `poetry shell` | Ativa o ambiente virtual |
+| `poetry run <cmd>` | Executa comando no ambiente |
+| `poetry add <lib>` | Instala dependência |
+| `poetry remove <lib>` | Remove dependência |
+| `poetry install` | Instala dependências do projeto |
+| `poetry update` | Atualiza todas as libs |
+| `poetry export -f requirements.txt --output requirements.txt` | Gera arquivo compatível com pip |
+
+---
+
+## ✅ Projeto concluído!
+
+Seu ambiente **Django + REST + Poetry** está configurado com GitHub, pronto para desenvolver APIs profissionais.  
+Hora de codar com estilo 😎🔥
 
 ---
 
 📘 **Autor:** _Renato Minoita_  
-💻 **Tecnologia:** Django + Poetry + Git  
-📅 **Atualizado:** Outubro de 2025
+💻 **Tecnologias:** Django • Django REST Framework • Poetry • GitHub  
+📅 **Atualizado:** Outubro de 2025  
