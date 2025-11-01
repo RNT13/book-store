@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from order.factories import UserFactory
 from product.factories import CategoryFactory
 from product.models import Category
 
@@ -9,16 +10,27 @@ from product.models import Category
 class TestCategoryViewSet(APITestCase):
 
     def setUp(self):
-        self.category = CategoryFactory(title="Livros", slug="livros")
+        self.category = CategoryFactory(title="Eletrônicos")
+        self.user = UserFactory()
+        self.client.force_authenticate(user=self.user)
 
     def test_get_all_categories(self):
         url = reverse('category-list', kwargs={'version': 'v1'})
+
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(Category.objects.count(), 1)
+
         response_data = response.json()
-        self.assertEqual(len(response_data), 1)
-        self.assertEqual(response_data[0]['title'], self.category.title)
+
+        self.assertIn('results', response_data)
+        results = response_data['results']
+
+        self.assertEqual(len(results), 1)
+
+        self.assertEqual(results[0]['title'], self.category.title)
 
     def test_create_category(self):
         url = reverse('category-list', kwargs={'version': 'v1'})
