@@ -11,9 +11,7 @@ def test_product_serializer_with_categories():
     category2 = CategoryFactory(title="Promoção")
 
     product = ProductFactory(
-        title="Teclado Mecânico",
-        price=350,
-        categories=[category1, category2]
+        title="Teclado Mecânico", price=350, categories=[category1, category2]
     )
 
     serializer = ProductSerializer(instance=product)

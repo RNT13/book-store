@@ -7,7 +7,7 @@ def test_create_product_model():
     product_data = {
         "title": "Notebook Gamer Avançado",
         "description": "Um notebook potente para jogos e trabalho.",
-        "price": 7500
+        "price": 7500,
     }
 
     product = Product.objects.create(**product_data)
@@ -23,10 +23,8 @@ def test_create_product_model():
 
 @pytest.mark.django_db
 def test_product_category_relationship():
-    category1 = Category.objects.create(
-        title="Eletrônicos", slug="eletronicos")
-    category2 = Category.objects.create(
-        title="Computadores", slug="computadores")
+    category1 = Category.objects.create(title="Eletrônicos", slug="eletronicos")
+    category2 = Category.objects.create(title="Computadores", slug="computadores")
     product = Product.objects.create(title="Mouse Sem Fio", price=150)
 
     product.category.add(category1, category2)
