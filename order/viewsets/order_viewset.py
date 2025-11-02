@@ -1,5 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.authentication import (
+    SessionAuthentication,
+    BasicAuthentication,
+    TokenAuthentication,
+)
 from rest_framework.permissions import IsAuthenticated
 
 from order.models import Order
@@ -12,7 +16,7 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user).order_by('id')
+        return Order.objects.filter(user=self.request.user).order_by("id")
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

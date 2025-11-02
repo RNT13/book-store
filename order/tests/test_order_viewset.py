@@ -28,9 +28,7 @@ class TestOrderViewSet(APITestCase):
 
         self.category = CategoryFactory(title="Periféricos")
         self.product = ProductFactory(
-            title="Mouse Gamer",
-            price=250.00,
-            category=[self.category]
+            title="Mouse Gamer", price=250.00, category=[self.category]
         )
 
         self.order = OrderFactory(user=self.user, products=[self.product])
@@ -38,31 +36,30 @@ class TestOrderViewSet(APITestCase):
         print("🚀 Orders criadas:", Order.objects.count())
 
     def test_get_all_orders(self):
-        url = reverse('order-list', kwargs={'version': 'v1'})
+        url = reverse("order-list", kwargs={"version": "v1"})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response_data = response.json()['results']
+        response_data = response.json()["results"]
         self.assertEqual(len(response_data), 1)
 
         order_data = response_data[0]
-        self.assertEqual(len(order_data['products']), 1)
-        product_data = order_data['products'][0]
+        self.assertEqual(len(order_data["products"]), 1)
+        product_data = order_data["products"][0]
 
-        self.assertEqual(product_data['title'], self.product.title)
-        self.assertEqual(float(product_data['price']), 250.00)
-        self.assertEqual(product_data['category']
-                         [0]['title'], self.category.title)
+        self.assertEqual(product_data["title"], self.product.title)
+        self.assertEqual(float(product_data["price"]), 250.00)
+        self.assertEqual(product_data["category"][0]["title"], self.category.title)
 
     def test_create_order(self):
         new_user = UserFactory()
         self.client.force_authenticate(user=new_user)
 
         new_product = ProductFactory()
-        url = reverse('order-list', kwargs={'version': 'v1'})
-        data = {'products_id': [new_product.id]}
+        url = reverse("order-list", kwargs={"version": "v1"})
+        data = {"products_id": [new_product.id]}
 
-        response = self.client.post(url, data=data, format='json')
+        response = self.client.post(url, data=data, format="json")
         if response.status_code != status.HTTP_201_CREATED:
             print("❌ Erro na criação do pedido:", response.json())
 

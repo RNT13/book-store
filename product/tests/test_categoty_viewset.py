@@ -15,7 +15,7 @@ class TestCategoryViewSet(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_get_all_categories(self):
-        url = reverse('category-list', kwargs={'version': 'v1'})
+        url = reverse("category-list", kwargs={"version": "v1"})
 
         response = self.client.get(url)
 
@@ -25,21 +25,18 @@ class TestCategoryViewSet(APITestCase):
 
         response_data = response.json()
 
-        self.assertIn('results', response_data)
-        results = response_data['results']
+        self.assertIn("results", response_data)
+        results = response_data["results"]
 
         self.assertEqual(len(results), 1)
 
-        self.assertEqual(results[0]['title'], self.category.title)
+        self.assertEqual(results[0]["title"], self.category.title)
 
     def test_create_category(self):
-        url = reverse('category-list', kwargs={'version': 'v1'})
-        data = {
-            'title': "Tecnologia",
-            'slug': "tecnologia"
-        }
+        url = reverse("category-list", kwargs={"version": "v1"})
+        data = {"title": "Tecnologia", "slug": "tecnologia"}
 
-        response = self.client.post(url, data=data, format='json')
+        response = self.client.post(url, data=data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
