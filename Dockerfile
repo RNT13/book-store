@@ -51,7 +51,7 @@ WORKDIR $PYSETUP_PATH
 COPY poetry.lock pyproject.toml ./
 
 # quicker install as runtime deps are already installed
-RUN  poetry install --no-root
+RUN poetry install --no-root --with dev
 
 WORKDIR /app
 

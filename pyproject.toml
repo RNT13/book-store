@@ -3,7 +3,7 @@ name = "django-serializers"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "RNT13",email = "renatornt13@gmail.com"}
+    {name = "RNT13", email = "renatornt13@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.13"
@@ -22,17 +22,15 @@ packages = [{include = "django_serializers", from = "src"}]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[dependency-groups]
-dev = [
-    "pytest (>=8.4.2,<9.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)",
-    "factory-boy (>=3.3.3,<4.0.0)",
-    "flake8 (>=7.3.0,<8.0.0)",
-    "black (>=25.9.0,<26.0.0)",
-    "mypy (>=1.18.2,<2.0.0)",
-    "autopep8 (>=2.3.2,<3.0.0)",
-    "isort (>=7.0.0,<8.0.0)",
-    "mypy-extensions (>=1.1.0,<2.0.0)",
-    "django-stubs (>=5.2.7,<6.0.0)",
-    "djangorestframework-stubs (>=3.16.5,<4.0.0)"
-]
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.4.2,<9.0.0"
+pytest-django = ">=4.11.1,<5.0.0"
+factory_boy = ">=3.3.3,<4.0.0"
+flake8 = ">=7.3.0,<8.0.0"
+black = ">=25.9.0,<26.0.0"
+mypy = ">=1.18.2,<2.0.0"
+autopep8 = ">=2.3.2,<3.0.0"
+isort = ">=7.0.0,<8.0.0"
+mypy-extensions = ">=1.1.0,<2.0.0"
+django-stubs = ">=5.2.7,<6.0.0"
+djangorestframework-stubs = ">=3.16.5,<4.0.0"
