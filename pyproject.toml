@@ -1,38 +1,40 @@
-[project]
+# Seção [build-system] permanece a mesma, definindo o Poetry como backend.
+[build-system]
+requires = ["poetry-core>=1.0.0"] # Versão mais flexível e comum
+build-backend = "poetry.core.masonry.api"
+
+# Toda a configuração do projeto e dependências agora está aqui.
+[tool.poetry]
 name = "django-serializers"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "RNT13",email = "renatornt13@gmail.com"}
-]
+authors = ["RNT13 <renatornt13@gmail.com>"]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "django (>=5.2.7,<6.0.0)",
-    "djangorestframework (>=3.16.1,<4.0.0)",
-    "django-extensions (>=4.1,<5.0)",
-    "django-debug-toolbar (>=6.0.0,<7.0.0)",
-    "psycopg2-binary (>=2.9.11,<3.0.0)"
-]
+# A linha 'packages' foi ajustada para procurar o pacote na raiz do projeto.
+# Se sua pasta se chama 'django_serializers', esta é a configuração correta.
+packages = [{include = "django_serializers"}]
 
-[tool.poetry]
-packages = [{include = "django_serializers", from = "src"}]
+# Dependências principais do projeto
+[tool.poetry.dependencies]
+python = ">=3.13"
+django = ">=5.2.7,<6.0.0"
+djangorestframework = ">=3.16.1,<4.0.0"
+django-extensions = ">=4.1,<5.0"
+django-debug-toolbar = ">=6.0.0,<7.0.0"
+psycopg2-binary = ">=2.9.11,<3.0.0"
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[dependency-groups]
-dev = [
-    "pytest (>=8.4.2,<9.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)",
-    "factory-boy (>=3.3.3,<4.0.0)",
-    "flake8 (>=7.3.0,<8.0.0)",
-    "black (>=25.9.0,<26.0.0)",
-    "mypy (>=1.18.2,<2.0.0)",
-    "autopep8 (>=2.3.2,<3.0.0)",
-    "isort (>=7.0.0,<8.0.0)",
-    "mypy-extensions (>=1.1.0,<2.0.0)",
-    "django-stubs (>=5.2.7,<6.0.0)",
-    "djangorestframework-stubs (>=3.16.5,<4.0.0)"
-]
+# Dependências de desenvolvimento (para testes, linting, etc.)
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.4.2,<9.0.0"
+pytest-django = ">=4.11.1,<5.0.0"
+factory-boy = ">=3.3.3,<4.0.0"
+flake8 = ">=7.3.0,<8.0.0"
+black = ">=25.9.0,<26.0.0"
+mypy = ">=1.18.2,<2.0.0"
+autopep8 = ">=2.3.2,<3.0.0"
+isort = ">=7.0.0,<8.0.0"
+# mypy-extensions e stubs são dependências do mypy, então podem ficar aqui.
+mypy-extensions = ">=1.1.0,<2.0.0"
+django-stubs = ">=5.2.7,<6.0.0"
+djangorestframework-stubs = ">=3.16.5,<4.0.0"
