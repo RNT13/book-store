@@ -2,12 +2,9 @@
 name = "django-serializers"
 version = "0.1.0"
 description = ""
-authors = [
-    { name = "RNT13", email = "renatornt13@gmail.com" }
-]
+authors = ["RNT13 <renatornt13@gmail.com>"]
 readme = "README.md"
-packages = [{ include = "django_serializers", from = "src" }]
-requires-python = ">=3.13"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.13"
@@ -20,16 +17,24 @@ psycopg2-binary = ">=2.9.11,<3.0.0"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.4.2,<9.0.0"
 pytest-django = ">=4.11.1,<5.0.0"
-factory_boy = ">=3.3.3,<4.0.0"
+factory-boy = ">=3.3.3,<4.0.0"
 flake8 = ">=7.3.0,<8.0.0"
 black = ">=25.9.0,<26.0.0"
+isort = ">=7.0.0,<8.0.0"
 mypy = ">=1.18.2,<2.0.0"
 autopep8 = ">=2.3.2,<3.0.0"
-isort = ">=7.0.0,<8.0.0"
 mypy-extensions = ">=1.1.0,<2.0.0"
 django-stubs = ">=5.2.7,<6.0.0"
 djangorestframework-stubs = ">=3.16.5,<4.0.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# --- CONFIGURAÇÃO DAS FERRAMENTAS ---
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120

@@ -1,12 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.contrib.auth import get_user_model
 
 from order.factories import OrderFactory, UserFactory
-from product.factories import CategoryFactory, ProductFactory
 from order.models import Order
-from product.models import Product
+from product.factories import CategoryFactory, ProductFactory
 
 User = get_user_model()
 
@@ -17,9 +16,7 @@ class TestOrderViewSet(APITestCase):
         self.user = UserFactory()
 
         self.category = CategoryFactory(title="Periféricos")
-        self.product = ProductFactory(
-            title="Mouse Gamer", price=250.00, category=[self.category]
-        )
+        self.product = ProductFactory(title="Mouse Gamer", price=250.00, category=[self.category])
         self.order = OrderFactory(user=self.user, products=[self.product])
 
     def test_get_all_orders_as_authenticated_user(self):
@@ -31,11 +28,11 @@ class TestOrderViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response_data = response.json()
-        self.assertIn('count', response_data)
-        self.assertIn('results', response_data)
-        self.assertEqual(response_data['count'], 1)
+        self.assertIn("count", response_data)
+        self.assertIn("results", response_data)
+        self.assertEqual(response_data["count"], 1)
 
-        results = response_data['results']
+        results = response_data["results"]
         self.assertEqual(len(results), 1)
         order_data = results[0]
         self.assertEqual(len(order_data["products"]), 1)
@@ -43,8 +40,7 @@ class TestOrderViewSet(APITestCase):
         product_data = order_data["products"][0]
         self.assertEqual(product_data["title"], self.product.title)
         self.assertEqual(float(product_data["price"]), 250.00)
-        self.assertEqual(product_data["category"]
-                         [0]["title"], self.category.title)
+        self.assertEqual(product_data["category"][0]["title"], self.category.title)
 
     def test_create_order_as_authenticated_user(self):
         new_user = UserFactory()

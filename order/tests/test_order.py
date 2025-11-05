@@ -1,7 +1,7 @@
 import pytest
 
-from order.serializers import OrderSerializer
 from order.factories import OrderFactory
+from order.serializers import OrderSerializer
 from product.factories import ProductFactory
 
 

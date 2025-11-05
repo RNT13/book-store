@@ -1,7 +1,7 @@
 import factory
-from order.models import Order
-from product.factories import ProductFactory
 from django.contrib.auth.models import User
+
+from order.models import Order
 
 
 class UserFactory(factory.django.DjangoModelFactory):

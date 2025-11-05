@@ -1,11 +1,11 @@
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
 
-from product.factories import CategoryFactory, ProductFactory
-from product.models import Product, Category
 from order.factories import UserFactory
+from product.factories import CategoryFactory, ProductFactory
+from product.models import Category, Product
 
 
 class TestProductViewSet(APITestCase):
@@ -17,9 +17,7 @@ class TestProductViewSet(APITestCase):
 
         self.category = CategoryFactory(title="Computadores")
 
-        self.product = ProductFactory(
-            title="Computador Gamer", price=5000.00, category=[self.category]
-        )
+        self.product = ProductFactory(title="Computador Gamer", price=5000.00, category=[self.category])
 
     def test_get_all_products(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
@@ -43,9 +41,7 @@ class TestProductViewSet(APITestCase):
 
         new_category = Category.objects.filter(slug="tecnologia").first()
         if new_category is None:
-            new_category = Category.objects.create(
-                title="Notebook Ultra Fino", slug="tecnologia"
-            )
+            new_category = Category.objects.create(title="Notebook Ultra Fino", slug="tecnologia")
 
         url = reverse("product-list", kwargs={"version": "v1"})
         data = {

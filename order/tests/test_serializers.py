@@ -1,9 +1,8 @@
 import pytest
 
-from product.factories import ProductFactory
 from order.factories import OrderFactory
-
 from order.serializers import OrderSerializer
+from product.factories import ProductFactory
 
 
 @pytest.mark.django_db
