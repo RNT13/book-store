@@ -1,3 +1,5 @@
+# Arquivo: pyproject.toml (VERSÃO FINAL CORRIGIDA)
+
 [tool.poetry]
 name = "django-serializers"
 version = "0.1.0"
@@ -6,9 +8,8 @@ authors = ["RNT13 <renatornt13@gmail.com>"]
 readme = "README.md"
 package-mode = false
 
-
 [tool.poetry.dependencies]
-python = ">=3.13"
+python = ">=3.13"  # <-- LUGAR CORRETO
 django = ">=5.2.7,<6.0.0"
 djangorestframework = ">=3.16.1,<4.0.0"
 django-extensions = ">=4.1,<5.0"
@@ -21,13 +22,21 @@ pytest-django = ">=4.11.1,<5.0.0"
 factory_boy = ">=3.3.3,<4.0.0"
 flake8 = ">=7.3.0,<8.0.0"
 black = ">=25.9.0,<26.0.0"
+isort = ">=7.0.0,<8.0.0"
 mypy = ">=1.18.2,<2.0.0"
 autopep8 = ">=2.3.2,<3.0.0"
-isort = ">=7.0.0,<8.0.0"
 mypy-extensions = ">=1.1.0,<2.0.0"
 django-stubs = ">=5.2.7,<6.0.0"
 djangorestframework-stubs = ">=3.16.5,<4.0.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# --- CONFIGURAÇÃO DAS FERRAMENTAS ---
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120

@@ -1,7 +1,6 @@
 import pytest
 
-from product.factories import ProductFactory, CategoryFactory
-
+from product.factories import CategoryFactory, ProductFactory
 from product.serializers.product_serializer import ProductSerializer
 
 
@@ -10,9 +9,7 @@ def test_product_serializer_with_categories():
     category1 = CategoryFactory(title="Periféricos")
     category2 = CategoryFactory(title="Promoção")
 
-    product = ProductFactory(
-        title="Teclado Mecânico", price=350, categories=[category1, category2]
-    )
+    product = ProductFactory(title="Teclado Mecânico", price=350, categories=[category1, category2])
 
     serializer = ProductSerializer(instance=product)
     data = serializer.data

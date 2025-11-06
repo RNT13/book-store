@@ -88,8 +88,8 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
-        'TEST': {
-            'NAME': 'test_bookstore_dev_db',
+        "TEST": {
+            "NAME": "test_bookstore_dev_db",
         },
     }
 }
@@ -151,8 +151,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SECRET_KEY = os.getenv(
-    'SECRET_KEY', 'django-insecure-a-default-key-for-testing-only')
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-a-default-key-for-testing-only")
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
