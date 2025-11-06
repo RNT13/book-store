@@ -44,4 +44,5 @@ COPY . .
 EXPOSE 8000
 
 # ✅ RUN GUNICORN USING PORT FROM RENDER
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:${PORT}"]
+CMD gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+
