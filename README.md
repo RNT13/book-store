@@ -2,7 +2,7 @@
 
 This guide teaches you **from scratch** how to create, configure, and
 run a **Django** project using **Poetry** for dependency management,
-**GitHub** for version control, and **Render** for deployment.\
+**GitHub** for version control, and **Render** for deployment.
 Perfect for those who want a **clean, professional, and scalable
 setup**. 🚀
 
@@ -10,12 +10,14 @@ setup**. 🚀
 
 ## 🧩 1. Create the GitHub repository
 
-1.  Go to https://github.com/new and click **New Repository**.\
-2.  Choose a name (example): `book-store`.\
-3.  Check:
-    - ✅ **Add a README file**
-    - ✅ **Add .gitignore** → choose **Python**
-4.  Click **Create repository**.
+1. Go to [https://github.com/new](https://github.com/new) and click **New Repository**.\
+2. Choose a name (example): `book-store`.\
+3. Check:
+
+   - ✅ **Add a README file**
+   - ✅ **Add .gitignore** → choose **Python**
+
+4. Click **Create repository**.
 
 ---
 
@@ -63,7 +65,7 @@ Example `pyproject.toml`:
 name = "book-store"
 version = "0.1.0"
 description = "Book Store API"
-authors = [{name = "Renato Minoita", email = "renatornt13@gmail.com"}]
+authors = [{name = "Renato Minoita", email = "email@exemplo.com"}]
 readme = "README.md"
 requires-python = ">=3.13"
 
@@ -230,15 +232,16 @@ urlpatterns = [
 
 # ✅ 12. Adding Render Deployment Configuration (Very Important)
 
-Render does **not** use Poetry directly.\
-You must generate a `requirements.txt`.
+Render does **not** use Poetry directly.
+You must generate a `requirements.txt` using **pip freeze**.
 
 ---
 
 ## ✅ Generate `requirements.txt`
 
 ```bash
-poetry export -f requirements.txt --output requirements.txt --without-hashes
+poetry install  # garante que todas dependências estão instaladas
+pip freeze > requirements.txt
 ```
 
 Commit this file to GitHub.
@@ -249,7 +252,7 @@ Commit this file to GitHub.
 
 ```bash
 poetry add gunicorn
-poetry export -f requirements.txt --output requirements.txt --without-hashes
+pip freeze > requirements.txt
 ```
 
 ---
@@ -260,7 +263,7 @@ Render uses PostgreSQL:
 
 ```bash
 poetry add psycopg2-binary
-poetry export -f requirements.txt --output requirements.txt --without-hashes
+pip freeze > requirements.txt
 ```
 
 ---
@@ -302,7 +305,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 ## ✅ Create `Procfile` (optional but recommended)
 
-    web: gunicorn bookstore.wsgi:application
+```
+web: gunicorn bookstore.wsgi:application
+```
 
 ---
 
@@ -329,34 +334,28 @@ databases:
 
 ## ✅ Render Deploy Steps
 
-1.  Push your project to GitHub
-2.  Create a free account at https://render.com
-3.  Click **New → Web Service**
-4.  Connect your GitHub repository
-5.  Build command:
+1. Push your project to GitHub
+2. Create a free account at [https://render.com](https://render.com)
+3. Click **New → Web Service**
+4. Connect your GitHub repository
+5. Build command:
 
-```{=html}
-<!-- -->
+```
+pip install -r requirements.txt
 ```
 
-    pip install -r requirements.txt
+6. Start command:
 
-6.  Start command:
-
-```{=html}
-<!-- -->
+```
+gunicorn bookstore.wsgi:application
 ```
 
-    gunicorn bookstore.wsgi:application
+7. After deploy → open **Shell** and run:
 
-7.  After deploy → open **Shell** and run:
-
-```{=html}
-<!-- -->
 ```
-
-    python manage.py migrate
-    python manage.py collectstatic --noinput
+python manage.py migrate
+python manage.py collectstatic --noinput
+```
 
 Done ✅
 
@@ -366,6 +365,6 @@ Your Django API is live on Render 🎉
 
 # ✅ Author
 
-**Renato Minoita**\
-Technologies: Django • DRF • Poetry • Render • GitHub\
+**Renato Minoita**
+Technologies: Django • DRF • Poetry • Render • GitHub
 Updated: November 2025

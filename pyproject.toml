@@ -3,7 +3,7 @@ name = "book-store"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "RNT13",email = "renatornt13@gmail.com"}
+    {name = "RNT13", email = "renatornt13@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.13"
@@ -17,7 +17,6 @@ dependencies = [
     "dj-database-url (>=3.0.1,<4.0.0)"
 ]
 
-
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -30,8 +29,15 @@ line-length = 120
 profile = "black"
 line_length = 120
 
+[tool.poetry]
+# Desabilita o modo pacote para evitar erro de instalação do projeto
+packages = []
+
 [dependency-groups]
 dev = [
     "black (>=25.11.0,<26.0.0)",
-    "isort (>=7.0.0,<8.0.0)"
+    "isort (>=7.0.0,<8.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)",
+    "pytest (>=9.0.0,<10.0.0)",
+    "factory-boy (>=3.3.3,<4.0.0)"
 ]
