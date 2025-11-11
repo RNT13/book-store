@@ -1,35 +1,15 @@
 import os
 from pathlib import Path
-
 import dj_database_url
 
-# Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- Configurações Dinâmicas de Ambiente ---
+# Segurança
+SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
+DEBUG = os.getenv("DEBUG", "0") == "1"
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split()
 
-# Detecta se a aplicação está rodando no ambiente do Render
-IS_RENDER = os.getenv("RENDER", "false") == "true"
-
-# A chave secreta é lida do ambiente em produção. O Render irá gerar uma.
-# Para desenvolvimento, uma chave padrão é usada.
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-chave-local-para-desenvolvimento")
-
-# DEBUG é False em produção (no Render) e True localmente.
-DEBUG = not IS_RENDER
-
-# Hosts permitidos: no Render, usa o hostname fornecido. Localmente, permite localhost.
-ALLOWED_HOSTS = []
-if IS_RENDER:
-    RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-    if RENDER_EXTERNAL_HOSTNAME:
-        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-else:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
-
-# --- Aplicações e Middlewares ---
-
+# Apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -37,12 +17,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "rest_framework",
+    "rest_framework.authtoken",
+
     "django_extensions",
     "product",
     "order",
-    "rest_framework.authtoken",
 ]
+
+# Debug toolbar só no desenvolvimento
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -54,14 +40,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# Adiciona a Django Debug Toolbar apenas em ambiente de desenvolvimento
 if DEBUG:
-    INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
-    INTERNAL_IPS = ["127.0.0.1"]
 
 ROOT_URLCONF = "core.urls"
-WSGI_APPLICATION = "core.wsgi.application"
 
 TEMPLATES = [
     {
@@ -78,26 +60,17 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "core.wsgi.application"
 
-# --- Banco de Dados ---
+# Banco de Dados
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600,
+    )
+}
 
-if IS_RENDER:
-    # Em produção (Render), usa a DATABASE_URL fornecida pelo serviço de banco de dados.
-    DATABASES = {
-        "default": dj_database_url.config(conn_max_age=600, ssl_require=True)  # PostgreSQL no Render exige conexão SSL.
-    }
-else:
-    # Em desenvolvimento, usa um banco de dados SQLite local.
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
-
-# --- Validação de Senha e Internacionalização ---
-
+# Passwords
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -105,26 +78,24 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LANGUAGE_CODE = "pt-br"
-TIME_ZONE = "America/Sao_Paulo"
+# Internacionalização
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-
-# --- Arquivos Estáticos ---
-
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Diretório para coletar arquivos estáticos em produção
-
-
-# --- Outras Configurações ---
+# Static files
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Django REST
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 10,
+    "PAGE_SIZE": 5,
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
