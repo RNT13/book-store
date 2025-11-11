@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Segurança
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
-DEBUG = os.getenv("DEBUG", "0") == "1"
+DEBUG = os.getenv("DEBUG", "1") == "1"  # Ative DEBUG por padrão no dev
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split()
 
 # Apps
@@ -20,15 +20,16 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "django_extensions",
-    "product",
     "order",
+    "product",
 ]
 
-# Debug toolbar só no desenvolvimento
 if DEBUG:
-    INSTALLED_APPS.append("debug_toolbar")
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
 
+# Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -40,8 +41,9 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
 
+# URLs e templates
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -69,7 +71,7 @@ DATABASES = {
     )
 }
 
-# Passwords
+# Senhas
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -83,13 +85,12 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Arquivos estáticos
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Django REST
+# Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
@@ -99,3 +100,8 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
 }
+
+# Debug Toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
