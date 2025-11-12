@@ -8,7 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
 DEBUG = os.getenv("DEBUG", "1") == "1"  # Ative DEBUG por padrão no dev
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split()
+ALLOWED_HOSTS = ["*"]
+
 
 # Apps
 INSTALLED_APPS = [
