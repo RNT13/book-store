@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Segurança
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
 DEBUG = os.getenv("DEBUG", "1") == "1"  # Ative DEBUG por padrão no dev
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend-django.onrender.com"]  # hosts permitidos
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost").split()  # hosts permitidos
 
 
 # Apps

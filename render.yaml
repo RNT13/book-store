@@ -9,7 +9,7 @@ services:
         generateValue: true # Generate a random secret key
       - key: DEBUG
         value: "0"
-      - key: ALLOWED_HOSTS # Set the ALLOWED_HOSTS environment variable
+      - key: DJANGO_ALLOWED_HOSTS # Set the DJANGO_ALLOWED_HOSTS environment variable
         value: backend-django.onrender.com # Replace with your desired value
       - key: DATABASE_URL
         fromDatabase:
