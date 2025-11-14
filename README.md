@@ -67,7 +67,7 @@ version = "0.1.0"
 description = "Book Store API"
 authors = [{name = "Renato Minoita", email = "email@exemplo.com"}]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0"]
@@ -80,13 +80,7 @@ build-backend = "poetry.core.masonry.api"
 
 ```bash
 poetry install
-poetry shell
-```
-
-Exit:
-
-```bash
-exit
+poetry env activate
 ```
 
 ---
@@ -102,7 +96,7 @@ poetry add django djangorestframework
 ## 🏗️ 7. Create the Django project
 
 ```bash
-poetry run django-admin startproject bookstore .
+poetry run django-admin startproject core .
 ```
 
 ---
@@ -113,7 +107,7 @@ poetry run django-admin startproject bookstore .
 poetry run python manage.py startapp api
 ```
 
-Add to `bookstore/settings.py`:
+Add to `core/settings.py`:
 
 ```python
 INSTALLED_APPS = [
@@ -216,7 +210,7 @@ urlpatterns = [
 
 ---
 
-## `bookstore/urls.py`
+## `core/urls.py`
 
 ```python
 from django.contrib import admin
@@ -232,8 +226,7 @@ urlpatterns = [
 
 # ✅ 12. Adding Render Deployment Configuration (Very Important)
 
-Render does **not** use Poetry directly.
-You must generate a `requirements.txt` using **pip freeze**.
+The Render can deploy directly from a Dockerfile, which simplifies the process. To do this, we need some dependencies and configuration files.
 
 ---
 
@@ -244,43 +237,30 @@ poetry install  # garante que todas dependências estão instaladas
 pip freeze > requirements.txt
 ```
 
-Commit this file to GitHub.
-
----
-
-## ✅ Install Gunicorn (Render requirement)
+## ✅ Install the `dempendencies`
 
 ```bash
-poetry add gunicorn
-pip freeze > requirements.txt
+poetry add gunicorn psycopg2-binary dj-database-url whitenoise poetry-plugin-export
+```
+
+## ✅ Generate the `requirements.txt`
+
+```bash
+poetry export -f requirements.txt --output requirements.txt --without-hashes
 ```
 
 ---
 
-## ✅ Install PostgreSQL driver
-
-Render uses PostgreSQL:
-
-```bash
-poetry add psycopg2-binary
-pip freeze > requirements.txt
-```
-
----
-
-## ✅ Install and configure `dj-database-url`
-
-```bash
-poetry add dj-database-url
-```
-
-In `bookstore/settings.py`:
+In `core/settings.py`:
 
 ```python
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600,
+    )
 }
 ```
 
@@ -336,10 +316,78 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 ---
 
-## ✅ Create `Procfile` (optional but recommended)
+## ✅ Create `Dockerfile`
 
+```dockerfile
+# Dockerfile
+
+FROM python:3.13-slim
+
+# Configurações básicas
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /app
+
+# Instalar dependências de sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && apt-get clean
+
+# Instalar dependências Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar o projeto
+COPY . .
+
+# Variáveis para o Render
+ENV DJANGO_SETTINGS_MODULE=core.settings
+ENV PORT=8000
+
+# Coletar arquivos estáticos
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+# Rodar Gunicorn em produção com as migrações feitas
+CMD ["bash", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:8000"]
 ```
-web: gunicorn bookstore.wsgi:application
+
+---
+
+## ✅ Create `Docker-compose.yaml`
+
+```yaml
+services:
+  db:
+    image: postgres:16.0-alpine
+    ports:
+      - 5433:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=bookstore_dev
+      - POSTGRES_PASSWORD=bookstore123
+      - POSTGRES_DB=bookstore_dev_db
+
+  web:
+    build:
+      context: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - app_data:/usr/src/app
+    ports:
+      - 8000:8000
+    env_file:
+      - .env.dev
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  app_data:
 ```
 
 ---
@@ -372,34 +420,24 @@ databases:
 
 ---
 
-## ✅ Render Deploy Steps
+## ✅ 13. Steps to Deploy on Render
 
-1. Push your project to GitHub
-2. Create a free account at [https://render.com](https://render.com)
-3. Click **New → Web Service**
-4. Connect your GitHub repository
-5. Build command:
+With the `render.yaml` file in your repository, the process is very straightforward:
 
-```
-pip install -r requirements.txt
-```
+1.  **Push everything to GitHub**:
+    ```bash
+    git add .
+    git commit -m "Configure Docker and Render for deployment"
+    git push origin main
+    ```
+2.  Create a free account at [https://render.com](https://render.com).
+3.  On the dashboard, click **New → Blueprint**.
+4.  Connect your project's repository. Render will automatically detect and use the `render.yaml` file.
+5.  Click **Apply** to confirm and start the deployment.
 
-6. Start command:
+Render will build the Docker image, create the database, and launch your application. The `CMD` in the `Dockerfile` ensures that migrations are applied on every new deployment.
 
-```
-gunicorn bookstore.wsgi:application
-```
-
-7. After deploy → open **Shell** and run:
-
-```
-python manage.py migrate
-python manage.py collectstatic --noinput
-```
-
-Done ✅
-
-Your Django API is live on Render 🎉
+Done! ✅ Your Django API is live on Render. 🎉
 
 ---
 
