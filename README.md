@@ -286,11 +286,44 @@ DATABASES = {
 
 ---
 
-## ✅ Configure ALLOWED_HOSTS
+### Create the `.env.dev` file
+
+Create in the root:
+
+```env
+DEBUG=1
+SECRET_KEY=foo
+DJANGO_ALLOWED_HOSTS=127.0.0.1 localhost backend-django-oaig.onrender.com
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=bookstore_dev_db
+SQL_USER=bookstore_dev
+SQL_PASSWORD=bookstore123
+SQL_HOST=db
+SQL_PORT=5432
+```
+
+---
+
+## ✅ Configure the ALLOWED_HOSTS (DEV + Render)
+
+### 📌 settings.py
 
 ```python
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv(
+    "DJANGO_ALLOWED_HOSTS",
+    "127.0.0.1 localhost"
+).split()
+
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 ```
+
+### How it works
+
+- In **dev**, use only the values in `.env.dev`.
+- On **Render**, it automatically adds the public hostname.
+- Allows multiple hosts.
 
 ---
 
@@ -316,17 +349,24 @@ web: gunicorn bookstore.wsgi:application
 ```yaml
 services:
   - type: web
-    name: bookstore-api
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn bookstore.wsgi:application
+    name: backend-django
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
     envVars:
       - key: SECRET_KEY
-        generateValue: true
-      - key: DJANGO_SETTINGS_MODULE
-        value: bookstore.settings
+        generateValue: true # Generate a random secret key
+      - key: DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS # Set the DJANGO_ALLOWED_HOSTS environment variable
+        value: backend-django.onrender.com # Replace with your desired value
+      - key: DATABASE_URL
+        fromDatabase:
+          name: db
+          property: connectionString
+
 databases:
-  - name: bookstore-db
+  - name: db
     plan: free
 ```
 

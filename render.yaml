@@ -10,7 +10,7 @@ services:
       - key: DEBUG
         value: "0"
       - key: DJANGO_ALLOWED_HOSTS # Set the DJANGO_ALLOWED_HOSTS environment variable
-        value: backend-django.onrender.com # Replace with your desired value
+        value: backend-django-oaig.onrender.com .onrender.com localhost 127.0.0.1 # Replace for your deployment URL
       - key: DATABASE_URL
         fromDatabase:
           name: db
