@@ -230,13 +230,6 @@ The Render can deploy directly from a Dockerfile, which simplifies the process. 
 
 ---
 
-## ✅ Generate `requirements.txt`
-
-```bash
-poetry install  # garante que todas dependências estão instaladas
-pip freeze > requirements.txt
-```
-
 ## ✅ Install the `dempendencies`
 
 ```bash
