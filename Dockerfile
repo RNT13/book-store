@@ -28,5 +28,6 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-# Rodar Gunicorn em produção
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Rodar Gunicorn em produção com as migrações feitas
+CMD ["bash", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:8000"]
+
