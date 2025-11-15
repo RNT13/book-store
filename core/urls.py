@@ -17,10 +17,11 @@ def home(request):
         {
             "message": "API Bookstore funcionando",
             "endpoints": {
-                "orders": "/bookstore/v1/order/",
-                "products": "/bookstore/v1/product/",
                 "admin": "/admin/",
                 "__debug__": "/__debug__/",
+                "orders": "/bookstore/v1/order/",
+                "products": "/bookstore/v1/product/",
+                "categories": "/bookstore/v1/product/categories/",
             },
         }
     )
@@ -35,6 +36,7 @@ urlpatterns = [
         include(
             [
                 path("order/", include("order.urls")),
+                path("category/", include("product.urls")),
                 path("product/", include("product.urls")),
             ]
         ),
