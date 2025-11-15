@@ -76,6 +76,11 @@ DATABASES = {
     )
 }
 
+# Segurança
+if not SECRET_KEY or SECRET_KEY == "insecure-default-key":
+    raise ValueError("SECRET_KEY must be set in production.")
+
+
 # Senhas
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

@@ -14,8 +14,8 @@ services:
     build:
       context: .
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - app_data:/usr/src/app
+    # volumes:
+    #   - app_data:/usr/src/app
     ports:
       - 8000:8000
     env_file:
