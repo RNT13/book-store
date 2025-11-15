@@ -13,6 +13,8 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
 DEBUG = os.getenv("DEBUG", "1") == "1"  # Ative DEBUG por padrão no dev
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost").split()  # hosts permitidos
+if not DEBUG and os.getenv("RENDER") == "true" and SECRET_KEY == "insecure-default-key":
+    raise ValueError("SECRET_KEY must be set in production.")
 
 
 # Apps
@@ -79,10 +81,6 @@ DATABASES = {
         conn_max_age=600,
     )
 }
-
-# Segurança
-if not SECRET_KEY or SECRET_KEY == "insecure-default-key":
-    raise ValueError("SECRET_KEY must be set in production.")
 
 
 # Senhas
