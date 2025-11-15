@@ -233,7 +233,7 @@ The Render can deploy directly from a Dockerfile, which simplifies the process. 
 ## ✅ Install the `dempendencies`
 
 ```bash
-poetry add gunicorn psycopg2-binary dj-database-url whitenoise poetry-plugin-export
+poetry add gunicorn psycopg2-binary dj-database-url whitenoise poetry-plugin-export python-dotenv
 ```
 
 ## ✅ Generate the `requirements.txt`
@@ -431,6 +431,43 @@ With the `render.yaml` file in your repository, the process is very straightforw
 Render will build the Docker image, create the database, and launch your application. The `CMD` in the `Dockerfile` ensures that migrations are applied on every new deployment.
 
 Done! ✅ Your Django API is live on Render. 🎉
+
+---
+
+# Poetry Command Table — 2025
+
+| Category                   | Command                                                                                                  | Description                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Project**                | `poetry new project-name`                                                                                | Creates a new project with basic structure.                          |
+|                            | `poetry init`                                                                                            | Initializes Poetry in an existing project.                           |
+| **Virtual Environment**    | `poetry env activate`                                                                                    | Activates the virtual environment (replaces the old `poetry shell`). |
+|                            | `poetry env use python3.13`                                                                              | Creates/uses an environment with a specific version of Python.       |
+|                            | `poetry env list`                                                                                        | Lists available virtual environments.                                |
+|                            | `poetry env info`                                                                                        | Shows information about the active environment.                      |
+| **Installation**           | `poetry install`                                                                                         | Installs dependencies from `pyproject.toml`.                         |
+| **Dependencies**           | `poetry add package-name`                                                                                | Adds a dependency to the project.                                    |
+|                            | `poetry add package-name==1.2.3`                                                                         | Adds a dependency with a specific version.                           |
+|                            | `poetry add --dev package-name`                                                                          | Adds a development dependency.                                       |
+|                            | `poetry remove package-name`                                                                             | Removes an installed dependency.                                     |
+|                            | `poetry update`                                                                                          | Updates all dependencies.                                            |
+|                            | `poetry update package-name`                                                                             | Updates a single dependency.                                         |
+| **Execution**              | `poetry run python`                                                                                      | Runs Python inside the Poetry environment.                           |
+|                            | `poetry run python manage.py runserver`                                                                  | Runs Django using Poetry.                                            |
+|                            | `poetry run pytest`                                                                                      | Runs tests with pytest.                                              |
+| **Exporting**              | `poetry export -f requirements.txt --output requirements.txt --without-hashes`                           | Generates a `requirements.txt` for deployment.                       |
+|                            | `poetry export -f requirements.txt --output requirements.txt`                                            | Exports requirements including hashes.                               |
+| **Configuration**          | `poetry config --list`                                                                                   | Lists current Poetry configurations.                                 |
+|                            | `poetry config pypi-token.pypi TOKEN`                                                                    | Configures a token for PyPI publishing.                              |
+| **Diagnostic**             | `poetry check`                                                                                           | Validates the `pyproject.toml`.                                      |
+|                            | `poetry show`                                                                                            | Lists installed packages.                                            |
+|                            | `poetry show package-name`                                                                               | Shows details about a dependency.                                    |
+|                            | `poetry show --tree`                                                                                     | Shows the dependency tree.                                           |
+| **Lock File**              | `poetry lock`                                                                                            | Generates/updates the `poetry.lock` file.                            |
+|                            | `poetry lock --no-update`                                                                                | Regenerates the lock without updating libraries.                     |
+| **Publishing (optional)**  | `poetry build`                                                                                           | Generates the package for distribution.                              |
+|                            | `poetry publish`                                                                                         | Publishes the package to PyPI.                                       |
+|                            | `poetry publish --build`                                                                                 | Builds and publishes the package in one command.                     |
+| **Useful Commands Extras** | `poetry run python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"` | Generates a SECRET_KEY for Django.                                   |
 
 ---
 

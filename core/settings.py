@@ -2,8 +2,12 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Carregar variáveis de ambiente
+load_dotenv(BASE_DIR / ".env")
 
 # Segurança
 SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key")
